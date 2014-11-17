@@ -1,19 +1,19 @@
-function prompt_char() {
-	if [ "$USER" = "root" ]
-	then echo "%{$bg[red]%}%{$fg[white]%}$%{$reset_color%}"
-	else echo '$';
+function display_host() {
+	m=%m
+	echo -n "%{$fg[magenta]%}"
+	if [ "$USER" = "root" ]; then
+		echo -n "%{$bg[red]%}%{$fg[white]%}root@%{$reset_color%}%{$fg[magenta]%}%m:"
+	elif [ "$USER" != "$DEFAULT_USER" ]; then 
+		echo -n "$USER@%m:"
+	elif [ "$m" != "$DEFAULT_HOST" ]; then
+		echo -n "$m:"
 	fi
+	echo -n "%{$reset_color%}"
 }
 
-function display_user() {
-	if [ "$USER" != "$DEFAULT_USER" ]
-	then echo ":$USER"
-	fi
-}
-
-PROMPT='%{$fg[blue]%}%1~ %(?,%{$fg[green]%},%{$fg[red]%})$(prompt_char) '
+PROMPT='$(display_host)%{$fg[blue]%}%1~ %(?,%{$fg[green]%},%{$fg[red]%})$ '
 # RPS1='%{$fg[blue]%}%~%{$reset_color%} '
-RPS1='%{$fg[blue]%}%4~$(git_prompt_info) %{$fg[magenta]%}%m$(display_user)%{$reset_color%} %{$fg[white]%}%D{%R}%{$reset_color%}'
+RPS1='%{$fg[blue]%}%4~$(git_prompt_info) %{$fg[white]%}%D{%R}%{$reset_color%}'
 
 ZSH_THEME_GIT_PROMPT_PREFIX=" %{$fg[yellow]%}("
 ZSH_THEME_GIT_PROMPT_SUFFIX=")%{$reset_color%}"
